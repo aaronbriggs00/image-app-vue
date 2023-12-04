@@ -1,5 +1,6 @@
 <template>
   <div class="image-index">
+    <h3>{{ message }}</h3>
     <div class="file-upload">
       <label>File
         <input type="file" @change="handleFileUpload( $event )"/>
@@ -49,7 +50,8 @@ export default {
       rotate_params: {
         transformation: "rotate",
         angle: "180"
-      }
+      },
+      message: ""
     }
   },
   methods: {
@@ -73,6 +75,7 @@ export default {
     submitImage() {
       let formData = new FormData();
       formData.append('blob', this.file);
+      this.message = "image upload starting..."
 
       //perform post
       axios.post('http://localhost:3000/images/',
@@ -89,8 +92,10 @@ export default {
             username: localStorage.getItem("user_name")
           }
           this.images.push(image)
+          this.message = "image processing..."
       }).catch((error) => {
         console.log(error)
+        this.message = error.response.data
       });
     },
     handleFileUpload( event ){
